@@ -29,6 +29,7 @@ public class Maze{
         findLength.nextLine();
         numRows++;
       }
+
       String s = scan.nextLine();
       numRows = s.length();
 
