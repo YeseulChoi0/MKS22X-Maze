@@ -5,6 +5,7 @@ public class Maze{
     private char[][]maze;
     private boolean animate;//false by default
     private int lengthPath = 0;
+    private boolean found = false;
 
     /*Constructor loads a maze text file, and sets animate to false by default.
 
@@ -113,16 +114,18 @@ public class Maze{
 
     private int solve(int row, int col){ //you can add more parameters since this is private
       if(animate){
-          //clearTerminal();
+          clearTerminal();
           System.out.println(this);
-          wait(100);
+          wait(20);
       }
       System.out.println(lengthPath);
       if (maze[row][col] == 'E'){
-        System.out.println("please please pleasee work");
+        found = true;
         return lengthPath;
       }if (maze[row][col] == '#' || maze[row][col] == '.'){
-        System.out.println("AHHHHHH ");
+        if (found){
+          return lengthPath;
+        }
         return -1;
       }if (maze[row][col] == ' '){
         maze[row][col] = '@';
@@ -134,7 +137,6 @@ public class Maze{
         }if (solve(row, col+1) != -1){
           return lengthPath;
         }if (solve(row, col-1) != -1){
-          System.out.println(solve(row, col-1));
           return lengthPath;
         }else{
           maze[row][col] = '.';
