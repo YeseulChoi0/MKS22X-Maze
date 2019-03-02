@@ -118,11 +118,10 @@ public class Maze{
           System.out.println(this);
           wait(20);
       }
-      System.out.println(lengthPath);
       if (maze[row][col] == 'E'){
         found = true;
         return lengthPath;
-      }if (maze[row][col] == '#' || maze[row][col] == '.'){
+      }if (maze[row][col] == '#' || maze[row][col] == '.' || maze[row][col] == '@'){
         if (found){
           return lengthPath;
         }
@@ -143,7 +142,6 @@ public class Maze{
           lengthPath--;
         }
       }
-
       return -1;
     }
 
