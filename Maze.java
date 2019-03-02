@@ -4,6 +4,7 @@ public class Maze{
 
     private char[][]maze;
     private boolean animate;//false by default
+    private int lengthPath = 0;
 
     /*Constructor loads a maze text file, and sets animate to false by default.
 
@@ -22,8 +23,9 @@ public class Maze{
       int numRows = 0;
       int numCols = 0;
 
-      Scanner scan = new Scanner(filename);
-      Scanner findLength = new Scanner(filename);
+      File file = new File(filename);
+      Scanner scan = new Scanner(file);
+      Scanner findLength = new Scanner(file);
 
       while (findLength.hasNextLine()){
         findLength.nextLine();
@@ -31,16 +33,16 @@ public class Maze{
       }
 
       String s = scan.nextLine();
-      numRows = s.length();
+      numCols = s.length();
 
-      char[][] maze = new char[numRows][numCols];
+      maze = new char[numRows][numCols];
       for (int i = 0; i < s.length(); i++){
-        maze[0][i] = s[i];
+        maze[0][i] = s.charAt(i);
       }
       for (int line = 1; scan.hasNextLine(); line++){
         s = scan.nextLine();
         for (int i = 0; i < s.length(); i++){
-          maze[line][i] = s[i];
+          maze[line][i] = s.charAt(i);
         }
       }
 
@@ -70,18 +72,35 @@ public class Maze{
       Since the constructor exits when the file is not found or is missing an E or S, we can assume it exists.
     */
     public int solve(){
-            //find the location of the S.
+      int startRow = 0;
+      int startCol = 0;
+      for (int row = 0; row < maze.length; row++){
+        for (int col = 0; col < maze[0].length; col++){
+          if (maze[row][col] == 'S') {
+            startRow = row;
+            startCol = col;
+            maze[row][col] = ' ';
+          }
+        }
+      }
+      return solve(startRow, startCol);
+    }
 
-            //erase the S
-
-            //and start solving at the location of the s.
-            //return solve(???,???);
+    public String toString(){
+      String s = "";
+      for (int row = 0; row < maze.length; row++){
+        for (int col = 0; col < maze[0].length; col++){
+          s += maze[row][col];
+        }
+        s += "\n";
+      }
+      return s;
     }
 
     /*
       Recursive Solve function:
 
-      A solved maze has a path marked with '@' from S to E.
+      A solved maze has a lengthPath marked with '@' from S to E.
 
       Returns the number of @ symbols from S to E when the maze is solved,
       Returns -1 when the maze has no solution.
@@ -91,17 +110,43 @@ public class Maze{
         All visited spots that were not part of the solution are changed to '.'
         All visited spots that are part of the solution are changed to '@'
     */
+
     private int solve(int row, int col){ //you can add more parameters since this is private
-
-        //automatic animation! You are welcome.
-        if(animate){
-            clearTerminal();
-            System.out.println(this);
-            wait(20);
+      if(animate){
+          //clearTerminal();
+          System.out.println(this);
+          wait(100);
+      }
+      System.out.println(lengthPath);
+      if (maze[row][col] == 'E'){
+        System.out.println("please please pleasee work");
+        return lengthPath;
+      }if (maze[row][col] == '#' || maze[row][col] == '.'){
+        System.out.println("AHHHHHH ");
+        return -1;
+      }if (maze[row][col] == ' '){
+        maze[row][col] = '@';
+        lengthPath++;
+        if (solve(row+1, col) != -1){
+          return lengthPath;
+        }if (solve(row-1, col) != -1){
+          return lengthPath;
+        }if (solve(row, col+1) != -1){
+          return lengthPath;
+        }if (solve(row, col-1) != -1){
+          System.out.println(solve(row, col-1));
+          return lengthPath;
+        }else{
+          maze[row][col] = '.';
+          lengthPath--;
         }
+      }
 
-        //COMPLETE SOLVE
-        return -1; //so it compiles
+      return -1;
     }
+
+    /**
+
+    **/
 
 }
